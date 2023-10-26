@@ -1,0 +1,11 @@
+{
+    "name": "jayveeinfinity/cars-api",
+    "description": "A simple api for carss",
+    "type": "project",
+    "authors": [
+        {
+            "name": "John Vincent Bonza"
+        }
+    ],
+    "require": {}
+}
