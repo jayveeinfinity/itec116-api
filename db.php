@@ -1,6 +1,6 @@
 <?php
     $host = "localhost";
-    $dbname = "cars_api";
+    $dbname = "inventory_db";
     $username = "root";
     $password = "";
 
