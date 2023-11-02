@@ -2,6 +2,7 @@
 
 class Router
 {
+    private $root = '/itec116_bonza/api';
     private $routes = [];
 
     public function get($path, $callback) {
@@ -36,7 +37,9 @@ class Router
         $method = $_SERVER['REQUEST_METHOD'];
         $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-        $path = str_replace('/cars_api', '', $path);
+        // /itec116_bonza/cars-api/products/2
+        $path = str_replace($this->root, '', $path);
+        // /products/2
 
         foreach ($this->routes as $route) {
             if ($route['method'] === $method && preg_match($route['pattern'], $path, $matches)) {
@@ -66,6 +69,8 @@ class Router
             $controllerInstance->$method($routeParams);
         } elseif (is_callable($callback)) {
             call_user_func($callback, $routeParams);
+        } else {
+            echo json_encode(['error' => "Callback error"]);
         }
     }
 }

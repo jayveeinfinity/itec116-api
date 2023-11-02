@@ -1,6 +1,6 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /cars_api
+    RewriteBase /itec116_bonza/api
 
     # Rewrite all requests to the index.php file
     RewriteCond %{REQUEST_FILENAME} !-f
