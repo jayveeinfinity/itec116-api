@@ -2,7 +2,7 @@
 
 class Router
 {
-    private $root = '/itec116_bonza/api';
+    private $root = '/itec116_api';
     private $routes = [];
 
     public function get($path, $callback) {
