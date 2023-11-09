@@ -215,4 +215,50 @@ class SalesController {
             "amount" => $total_amount
         ]);
     }
+
+    public function salesReportPerItem($params) {
+        global $pdo;
+
+        if (!isset($params['product_id'])) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Invalid request']);
+            return;
+        }
+
+        $product_id = $params['product_id'];
+
+        // Validate that $id is a positive integer
+        if (!ctype_digit((string)$product_id) || $product_id <= 0) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Invalid request']);
+            return;
+        }
+
+        $stmt = $pdo->prepare("SELECT * FROM `products_tbl` WHERE `id` = ?");
+        $stmt->execute([$product_id]);
+
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$product) {
+            http_response_code(404);
+            echo json_encode(['error' => 'Product not found']);
+            return;
+        }
+
+        $stmt = $pdo->prepare("SELECT `p`.`id` `product_id`, `p`.`name` `product_name`, `p`.`category` `product_category`, COUNT(`s`.`id`) `sales_count`, SUM(`s`.`qty`) `sales_qty`, SUM(`total_amount`) `sales_amount` FROM `sales_tbl` `s` LEFT JOIN `products_tbl` `p` ON `p`.`id` = `s`.`product_id` WHERE `product_id` = ? GROUP BY `product_id`");
+        $stmt->execute([$product_id]);
+
+        $sales = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$sales) {
+            http_response_code(404);
+            echo json_encode(['error' => 'No sales found']);
+            return;
+        }
+
+        echo json_encode([
+            "message" => "Sales report successfully generated!",
+            "data" => $sales
+        ]);
+    }
 }
