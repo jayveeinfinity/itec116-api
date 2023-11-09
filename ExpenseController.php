@@ -94,6 +94,45 @@ class ExpenseController
 
         echo json_encode(['message' => "Successfully deleted."]);
     }
+
+    public function monthlyReport() {
+        global $pdo;
+
+        $data = json_decode(file_get_contents("php://input"), true);
+
+        if (!isset($data['month'])) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Invalid month']);
+            return;
+        }
+
+        $month = $data['month'];
+
+        // Validate that $id is a positive integer
+        if (!ctype_digit((string)$month) || $month <= 0) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Invalid request']);
+            return;
+        }
+
+        $stmt = $pdo->prepare("SELECT `week`, SUM(`amount`) `amount` FROM `expenses_tbl` WHERE `month` = ? GROUP BY `week`");
+        $stmt->execute([$month]);
+
+        $report = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        http_response_code(200);
+
+        if (!$report) {
+            echo json_encode(['error' => 'No report to generate.']);
+            return;
+        }
+
+        echo json_encode([
+            "message" => "Expenses report successfully generated!",
+            "count" => count($report),
+            "data" => $report
+        ]);
+    }
 }
 
 ?>

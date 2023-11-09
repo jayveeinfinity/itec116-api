@@ -2,12 +2,6 @@
 
 class CarController
 {
-
-    public function test() {
-        http_response_code(400);
-        echo json_encode(['Welcome to my API']);
-    }
-
     public function index()
     {
         global $pdo;

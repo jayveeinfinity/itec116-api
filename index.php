@@ -10,7 +10,11 @@
 
     $router = new Router();
 
-    $router->get('/', 'CarController@test');
+    $router->get('/', function() {
+        http_response_code(200);
+        echo json_encode(['Welcome to my ITEC116 API']);
+    });
+    
     $router->get('/cars', 'CarController@index');
     $router->post('/cars', 'CarController@store');
     $router->get('/cars/{id}', 'CarController@show');
@@ -24,13 +28,16 @@
 
     $router->get('/products', 'ProductController@index');
     $router->post('/products', 'ProductController@store');
-    //$router->put('/products/{id}', 'ProductController@update');
+    $router->put('/products/{id}', 'ProductController@update');
     $router->get('/products/{id}', 'ProductController@show');
 
     $router->get('/sales', 'SalesController@index');
     $router->post('/sales/{id}', 'SalesController@store');
     $router->post('/sales', 'SalesController@withdraw');
     $router->get('/sales/test/{id}', 'SalesController@test');
+
+    $router->get('/expenses/reports/monthly', 'ExpenseController@monthlyReport');
+    $router->get('/sales/reports/{product_id}', 'SalesController@salesReportPerItem');
 
     $router->handleRequest();
 ?>  
